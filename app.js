@@ -7,6 +7,8 @@ var mongo = require('mongodb');
 var db = require('monk')('localhost:27017/emails');
 var app = express();
 
+var config = require('./config');
+
 // bodyParser() gets the data from a POST.
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -54,8 +56,42 @@ app.use(router);
 
 
 
-app.listen(3000);
-console.log("listening on port 3000");
+app.listen(config.port);
+console.log("listening on port:", config.port);
 
+
+var http = require('http');
+var apiToken = config.apiToken;
+var emailbody = {
+   'From': config.fromEmail,
+   'To': config.toEmail, 
+   'Subject': 'Postmark test', 
+   'HtmlBody': '<html><body><strong>Hello</strong> dear Postmark user.</body></html>'
+};
+sendEmail();
+function sendEmail () {
+    var data = "";
+    
+    var options = {
+        host: 'api.postmarkapp.com',
+        path: '/email',
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'X-Postmark-Server-Token': apiToken
+        }
+    };
+
+    var req = http.request(options, function(res) {
+        res.setEncoding('utf8');
+        res.on('data', function (chunk) {
+            console.log('body: ' + chunk);
+        });
+    });
+
+    req.write(JSON.stringify(emailbody));
+    req.end();
+}
 
 //module.exports = app;
