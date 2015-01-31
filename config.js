@@ -1,6 +1,6 @@
 var config = {};
 
-config.apiToken = "POSTMARK_API_TEST";
+config.apiToken = "ignore";
 config.toEmail = "test@test.test";
 config.fromEmail = "test@test.test";
 config.port = "3000";
