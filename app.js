@@ -91,5 +91,3 @@ function sendEmail (toEmail) {
     req.write(JSON.stringify(emailbody));
     req.end();
 }
-
-//module.exports = app;
