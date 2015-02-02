@@ -45,6 +45,7 @@ router.post('/addMail', function(req, res) {
          res.send("Error adding user to db.");
       }
       else {
+        sendEmail(useremail);
         res.location('thankyou');
         res.redirect('thankyou');
       }
@@ -54,24 +55,21 @@ router.post('/addMail', function(req, res) {
 // Tell express to use the route you just set up.
 app.use(router);
 
-
-
 app.listen(config.port);
 console.log("listening on port:", config.port);
 
 
 var http = require('http');
 var apiToken = config.apiToken;
-var emailbody = {
-   'From': config.fromEmail,
-   'To': config.toEmail, 
-   'Subject': 'Postmark test', 
-   'HtmlBody': '<html><body><strong>Hello</strong> dear Postmark user.</body></html>'
-};
-sendEmail();
-function sendEmail () {
-    var data = "";
+function sendEmail (toEmail) {
     
+    var emailbody = {
+       'From': config.fromEmail,
+       'To': toEmail, 
+       'Subject': 'Postmark test', 
+       'HtmlBody': '<html><body><strong>Hello</strong> dear Postmark user.</body></html>'
+    };
+
     var options = {
         host: 'api.postmarkapp.com',
         path: '/email',
